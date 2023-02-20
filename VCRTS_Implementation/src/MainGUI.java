@@ -114,14 +114,10 @@ public class MainGUI extends JFrame implements ActionListener {
 
 		// Adds all elements to their respective panels
 		dropDownMenu.add(dropDownChoices);
-		textInput.add(label1);
-		textInput.add(textBox1);
-		textInput.add(label2);
-		textInput.add(textBox2);
-		textInput.add(label3);
-		textInput.add(textBox3);
-		buttonInput.add(button1);
-		buttonInput.add(button2);
+		textInput.add(label1);	textInput.add(textBox1);
+		textInput.add(label2);	textInput.add(textBox2);
+		textInput.add(label3);	textInput.add(textBox3);
+		buttonInput.add(button1);	buttonInput.add(button2);
 		textOutput.add(outputArea);
 
 		// At this point, implements each element into our GUI in order.
