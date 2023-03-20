@@ -1,38 +1,31 @@
-
-/* Project:  VCRTS: Vehicular Cloud Real Time System
-* Class: Client.java 
-* Author:   Justin Kyan, Goden Liu, Andy Mathura, Tahmidul Haque, David Chang, Kevin Boukpessi 
-* Date: 2/14/2023
-* This program allows for the creation of a Client Object that stores it's 
-* information including Id, Job Duration, and Job Deadline
-*/
+package main;
 import java.util.*;
 
-public class Client {
-	private int ClientID;
-	private String approximateTime;
-	private String jobDeadline;
-
-	public Client(int ClientID, String approximateTime, String jobDeadline) {
-		this.ClientID = ClientID;
+public class Client extends User {
+	private String approximateTime, jobDeadline;
+	private ArrayList<Job> jobsSubmitted;
+	
+	public Client(int ClientID, String approximateTime, String jobDeadline, ArrayList<Job> jobsSubmitted){
+		super(ClientID);
 		this.approximateTime = approximateTime;
 		this.jobDeadline = jobDeadline;
+		this.jobsSubmitted = jobsSubmitted;
 	}
-
-	public int getClientID() {
-		return ClientID;
+	
+	public int getClientID(){
+		return this.id;
 	}
-
-	public String getApproximateTime() {
+	public String getApproximateTime(){
 		return approximateTime;
 	}
-
-	public String getJobDeadline() {
+	public String getJobDeadline(){
 		return jobDeadline;
 	}
-
-	public String toString() {
-		return "Client ID: " + ClientID + "\nDuration: " + approximateTime + "\nDeadline: " + jobDeadline + "\n";
+	public void submitJob(Job job) {
+		this.jobsSubmitted.add(job);
 	}
-
+	
+	public void requestJobCancel(Job job, int id) {
+		// In VC controller, remove job for the corresponding job ID.
+	}
 }

@@ -1,13 +1,32 @@
-
-/* Project:  VCRTS: Vehicular Cloud Real Time System
-* Class: Admin.java 
-* Author:   Justin Kyan, Goden Liu, Andy Mathura, Tahmidul Haque, David Chang, Kevin Boukpessi 
-* Date: 2/14/2023
-* This program is an Admin class that is currently Work in Progress 
-*/
+package main;
 import java.util.*;
 
-public class Admin {
-	public Admin() {
+
+public class Admin extends User {
+	boolean privileged = true;
+	
+	public Admin(int adminID) {
+		super(adminID);
 	}
+	
+	boolean isPrivileged(User u) {
+		return this.privileged;
+	}
+	
+	boolean addPrivilege(User u) {
+		return u.privilege = true;
+	}
+	
+	boolean removePrivilege(User u) {
+		return u.privilege = false;
+	}
+	
+	void accessVCController() {
+		// grant access to VCController
+	}
+	
+	void accessUserDB() {
+		// grant access to database of Users
+	}
+	
 }
