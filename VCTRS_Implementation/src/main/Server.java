@@ -20,19 +20,19 @@ public class Server {
         try {
             isRunning = true;
             System.out.println("This is the server");
-            System.out.println("Waiting for request");
+            System.out.println("Waiting for request\n");
             serverSocket = new ServerSocket(3000);
             socket = serverSocket.accept();
             System.out.println("User Connected");
 
             while (isRunning) {
-                System.out.println("Awaiting message");
+                System.out.println("Awaiting message\n\n");
 
                 inputStream = new DataInputStream(socket.getInputStream());
                 outputStream = new DataOutputStream(socket.getOutputStream());
                 
                 messageIn = inputStream.readUTF();
-                System.out.println("Message received");
+                System.out.println("Message received\n");
                 System.out.println(messageIn.toString());
                 System.out.println("Accept or reject?");
                 input = new Scanner(System.in);

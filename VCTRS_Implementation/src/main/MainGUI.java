@@ -3,6 +3,7 @@ import java.io.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+
 import java.time.*;
 import java.time.format.*;
 import java.net.ServerSocket;
@@ -132,7 +133,9 @@ public class MainGUI extends JFrame implements ActionListener {
 		this.setVisible(true);
 	}
 
+	
 	public void actionPerformed(ActionEvent event) {
+		//dropbox labelling for textboxes 
 		if (event.getSource() == dropdownChoices) {
 			if(dropdownChoices.getSelectedItem().equals("")) {
 				textB1.setVisible(false);
@@ -178,9 +181,13 @@ public class MainGUI extends JFrame implements ActionListener {
 			}
 		}
 
+		
 		if (event.getSource() == button1) {
 			try {
-				BufferedWriter clientJobFileWriter, ownerFileWriter;
+				fileProcess();
+				/*
+				 BufferedWriter clientJobFileWriter, ownerFileWriter;
+				 
 				
 				if(dropdownChoices.getSelectedItem().equals("Client")) {
 					clientJobFileWriter = new BufferedWriter(new FileWriter(clientFile,true));
@@ -198,6 +205,7 @@ public class MainGUI extends JFrame implements ActionListener {
 					ownerFileWriter.newLine();
 					ownerFileWriter.close();
 				}
+				*/
 			} 
 			catch (IOException e1) 
 			{
@@ -215,7 +223,7 @@ public class MainGUI extends JFrame implements ActionListener {
 					if(clientFile.exists()){
 						Desktop.getDesktop().open(clientFile);
 					}
-				} else { ;				}
+				} else { ;				} //For VC/Admin eventually
 				
 			} 
 			catch (IOException e1) {
@@ -233,7 +241,7 @@ public class MainGUI extends JFrame implements ActionListener {
 				output.setText(notice + "	" + toPrint);
 			}
 		}
-		
+	//	--------------------------------------------------
 		if (dropdownChoices.getSelectedItem().equals("Owner") && event.getSource() == button1) 
 		{
 			output.setText("Information submitted on: " + formattedTime + "\n" +
