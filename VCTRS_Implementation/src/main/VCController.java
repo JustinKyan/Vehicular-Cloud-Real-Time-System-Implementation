@@ -39,11 +39,7 @@ public class VCController {
     }
      
    
-    
-    /* boolean isJobComplete() {
-    	// return true if current job @ lookup's completion time is 0. else return false.
-    }
-    */
+   
     
     void printCurrentJobList() {
     	for(int i = 0; i < this.jobs.size(); i++) {
@@ -51,12 +47,7 @@ public class VCController {
     	}
     }
     
-    /* boolean deadlinePassed() {
-    	// return true if the current time is past the allocated deadline in "Job.java" [String at the moment, Date later]
-    	// else return false.
-    }
-    */
-    
+
     void addCar(Car v){ cars.add(v); } //recruit car
     
     void removeCar(ArrayList<Job> job, Car v) {

@@ -4,6 +4,8 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
+import com.sun.jdi.connect.spi.Connection;
+
 import java.time.*;
 import java.time.format.*;
 import java.net.ServerSocket;
@@ -24,6 +26,9 @@ public class MainGUI extends JFrame implements ActionListener {
 	static Socket socket;
 	static DataInputStream inputStream;
     static DataOutputStream outputStream;
+    static Connection connection = null;
+    
+
 	
 	private File ownerFile = new File("Owner Log.txt");
 	private File clientFile = new File("Client-Jobs.txt");
@@ -64,7 +69,7 @@ public class MainGUI extends JFrame implements ActionListener {
 
 		
 		//dropdownChoices box instantiation, goes into the dropdown Panel
-		String[] list = {"", "Client", "Owner", "Admin"};
+		String[] list = {"", "Client", "Owner"};
 		dropdownChoices = new JComboBox(list);
 		dropdownChoices.setBackground(Color.WHITE);
 		dropdownChoices.addActionListener(this);
@@ -185,27 +190,6 @@ public class MainGUI extends JFrame implements ActionListener {
 		if (event.getSource() == button1) {
 			try {
 				fileProcess();
-				/*
-				 BufferedWriter clientJobFileWriter, ownerFileWriter;
-				 
-				
-				if(dropdownChoices.getSelectedItem().equals("Client")) {
-					clientJobFileWriter = new BufferedWriter(new FileWriter(clientFile,true));
-					Job newJob = new Job(Integer.parseInt(textB1.getText()), textB2.getText(), Double.parseDouble(textB3.getText()));
-					controller.assignJob(newJob);
-					clientJobFileWriter.write("Time: " + formattedTime + "\n" + newJob.toString());
-					clientJobFileWriter.newLine();
-					clientJobFileWriter.close();
-				}
-				else if (dropdownChoices.getSelectedItem().equals("Owner")) {
-					ownerFileWriter = new BufferedWriter(new FileWriter(ownerFile,true));
-					Car c = new Car(Integer.parseInt(textB1.getText()), textB2.getText(), Double.parseDouble(textB3.getText()));
-					controller.addCar(c);
-					ownerFileWriter.write(c.toString() + "Time: " + formattedTime + "\n");
-					ownerFileWriter.newLine();
-					ownerFileWriter.close();
-				}
-				*/
 			} 
 			catch (IOException e1) 
 			{
@@ -241,7 +225,7 @@ public class MainGUI extends JFrame implements ActionListener {
 				output.setText(notice + "	" + toPrint);
 			}
 		}
-	//	--------------------------------------------------
+	//---------------------------------------------------------------------------------------------------------
 		if (dropdownChoices.getSelectedItem().equals("Owner") && event.getSource() == button1) 
 		{
 			output.setText("Information submitted on: " + formattedTime + "\n" +
@@ -251,7 +235,8 @@ public class MainGUI extends JFrame implements ActionListener {
 			textB1.setText("");
 			textB2.setText("");
 			textB3.setText("");
-		}	
+		}
+		
 		else if (dropdownChoices.getSelectedItem().equals("Client") && event.getSource() == button1) {
 			output.setText("Information submitted on: " + formattedTime + "\n" + 
 		"	Job ID: " + textB1.getText() + "\n" + 
@@ -278,6 +263,10 @@ public class MainGUI extends JFrame implements ActionListener {
 					System.out.println("Vehicle Accepted");
 					writeToFile(newVehicle.toString(), ownerFile);
 				}
+				if(messageIn.equals("reject")) {
+					System.out.println("Vehicle Rejected");
+				}
+				
 			}
 			else if(dropdownChoices.getSelectedItem().equals("Client")) {
 				Job newJob = new Job(id,info,duration);
@@ -288,7 +277,11 @@ public class MainGUI extends JFrame implements ActionListener {
 					System.out.println("Job Accepted");
 					writeToFile(newJob.toString(), clientFile);
 				}
+				if(messageIn.equals("reject")) {
+					System.out.println("Job Rejected");
+				}
 			}
+			
 		}catch (Exception e) {
 			e.printStackTrace();
 		}
