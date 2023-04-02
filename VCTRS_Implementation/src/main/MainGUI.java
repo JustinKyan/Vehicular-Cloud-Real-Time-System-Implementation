@@ -30,6 +30,7 @@ public class MainGUI extends JFrame implements ActionListener {
     
     private File ownerFile = new File("Owner Log.txt");
     private File clientFile = new File("Client-Jobs.txt");
+
     
     private VCController controller = new VCController();
     
@@ -121,11 +122,12 @@ public class MainGUI extends JFrame implements ActionListener {
             textB2.setVisible(false);
             textB3.setVisible(false);
             label1.setText("To start, choose a user.");
-            label2.setText("");
-            label3.setText("");
+            label2.setText("or");
+            label3.setText("If you are satisfied, Press Exit Program");
             button1.setVisible(false);
             button2.setVisible(false);
-            button3.setVisible(false);
+            button3.setVisible(true);
+            button3.setText("Exit Program");
         }
         
         this.add(dropdownMenu);
@@ -141,7 +143,7 @@ public class MainGUI extends JFrame implements ActionListener {
     }
  
     
-    public void actionPerformed(ActionEvent event) {
+    public void actionPerformed(ActionEvent event){
         //dropbox labelling for textboxes 
         if (event.getSource() == dropdownChoices) {
             if(dropdownChoices.getSelectedItem().equals("")) {
@@ -149,11 +151,12 @@ public class MainGUI extends JFrame implements ActionListener {
                 textB2.setVisible(false);
                 textB3.setVisible(false);
                 label1.setText("To start, choose a user.");
-                label2.setText("");
-                label3.setText("");
+                label2.setText("or");
+                label3.setText("If done, Press Exit Program");
                 button1.setVisible(false);
                 button2.setVisible(false);
-                button3.setVisible(false);
+                button3.setVisible(true);
+                button3.setText("Exit Program");
             }
             if (dropdownChoices.getSelectedItem().equals("Client")) {
                 textB1.setVisible(true); textB2.setVisible(true);   textB3.setVisible(true);
@@ -176,7 +179,10 @@ public class MainGUI extends JFrame implements ActionListener {
                 button2.setText("Car Owner Log");
             } 
         }
- 
+        
+        if (event.getSource() == button3 && dropdownChoices.getSelectedItem().equals("")) {
+        		System.exit(0);
+        }
         
         if (event.getSource() == button1) {
             try {
@@ -210,13 +216,14 @@ public class MainGUI extends JFrame implements ActionListener {
         // CALCULATION OF COMPLETION TIME
         if (dropdownChoices.getSelectedItem().equals("Client") && event.getSource() == button3) {
             String notice = "Going down the list, we will see the total completion time across all jobs.\n";
+            output.setText(notice);
             controller.getCompletionTime();
             for (Job job : controller.getJobs()) {
                 String toPrint = "\tCompletion time as of job ID# " + job.id + "\n";
                 toPrint += "\tJob ID: " + job.id + "\n"
                         + "\tJob Completion Time: " + job.jobDuration + "ms \n"
                         + "\tCumulative Job Completion Time: " + job.completionTime + "ms \n\n";
-                output.setText(notice + toPrint);
+                output.append(toPrint);
             }
         }
     // ---------------------------------------------------------------------------------------------------------
@@ -246,7 +253,8 @@ public class MainGUI extends JFrame implements ActionListener {
     }
     
     public void fileProcess(ActionEvent event) throws UnknownHostException, IOException{
-        int id = Integer.parseInt(textB1.getText());
+        //String userType = (String) dropdownChoices.getSelectedItem();
+    	int id = Integer.parseInt(textB1.getText());
         String info = textB2.getText();
         double duration = Double.parseDouble(textB3.getText());
         String messageIn = "";
@@ -256,30 +264,32 @@ public class MainGUI extends JFrame implements ActionListener {
                 
                 Car newVehicle = new Car(id, info,duration);
                 outputStream.writeUTF(newVehicle.toString());
-                controller.addCar(newVehicle);
                 messageIn = inputStream.readUTF();
                 if(messageIn.equals("Accept")) {
-                    output.append("\n\t[Vehicle Accepted]");
+                	controller.addCar(newVehicle);
+                    output.append("\n\t[Vehicle ACCEPTED]");
+                    output.append("\n\t[Vehicle Stored]");
                     writeToFile(newVehicle.toString(), ownerFile);
                 }
                 if(messageIn.equals("Reject")) {
-                    output.append("\n\t[Vehicle Rejected]");
+                    output.append("\n\t[Vehicle REJECTED]");
+                    output.append("\n\t[Vehicle was not Stored]");
                 }
                 
             }
             else if(dropdownChoices.getSelectedItem().equals("Client")) {
                 Job newJob = new Job(id,info,duration);
                 outputStream.writeUTF(newJob.toString());
-                controller.assignJob(newJob);
                 messageIn = inputStream.readUTF();
-                if(messageIn.equals("Accept")) {
-                    //informationsubmitted(event);
+                if(messageIn.equals("Accept")) {   
+                	controller.assignJob(newJob);
                     output.append("\n\t[JOB ACCEPTED]");
+                    output.append("\n\t[Job Stored]");
                     writeToFile(newJob.toString(), clientFile);
                 }
                 if(messageIn.equals("Reject")) {
-                    //informationsubmitted(event);
                     output.append("\n\t[JOB REJECTED]");
+                    output.append("\n\t[Job was not Stored]");
                 }
             }
             

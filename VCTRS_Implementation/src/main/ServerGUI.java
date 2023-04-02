@@ -11,7 +11,7 @@ public class ServerGUI extends JFrame implements ActionListener {
 	static DataInputStream inputStream2;
     static DataOutputStream outputStream2;
     public JTextArea incomingRequest;
-    public JButton acceptButton,rejectButton;
+    public JButton acceptButton,rejectButton, exitButton;
     public JPanel responsePanel, buttonPanel, testPanel;
     String messageIn = "";
     String messageOut = "";
@@ -25,11 +25,15 @@ public class ServerGUI extends JFrame implements ActionListener {
         
         responsePanel = new JPanel();
         responsePanel.setLayout(new BorderLayout());
+        responsePanel.setBackground(new Color(122, 122, 120));
         
         buttonPanel = new JPanel();
         buttonPanel.setLayout(new FlowLayout());
+        buttonPanel.setBackground(new Color(122, 122, 120));
         
         incomingRequest = new JTextArea(20,40);
+        incomingRequest.setBackground(new Color(237, 217, 164));
+        incomingRequest.setFont(new Font("Calibri", Font.BOLD, 14));
         incomingRequest.setEditable(false);
         incomingRequest.setMargin( new Insets(10,10,10,10) );
         incomingRequest.setLineWrap(true);
@@ -41,9 +45,13 @@ public class ServerGUI extends JFrame implements ActionListener {
         rejectButton= new JButton("Reject");
         rejectButton.addActionListener(this);
         
+        exitButton= new JButton("Exit Program");
+        exitButton.addActionListener(this);
+        
         responsePanel.add(incomingRequest);
         buttonPanel.add(acceptButton);
         buttonPanel.add(rejectButton);
+        buttonPanel.add(exitButton);
         
         this.add(responsePanel);
         this.add(buttonPanel);
@@ -80,6 +88,9 @@ public class ServerGUI extends JFrame implements ActionListener {
             {
 				e1.printStackTrace();
 			}
+        }
+        else if(e.getSource() == exitButton) {
+        	System.exit(0);
         }
     }
 
