@@ -29,61 +29,39 @@ public class Server {
         try {
             isRunning = true;
             ServerGUI serverGUI = new ServerGUI();
-            System.out.println("This is the server");
-            System.out.println("Waiting for request\n");
+            serverGUI.incomingRequest.setText("This is the server\n");
+            serverGUI.incomingRequest.append("Waiting for request\n");
             
             socket = serverSocket.accept();
-            System.out.println("User Connected");
+            serverGUI.incomingRequest.append("User Connected");
             inputStream = new DataInputStream(socket.getInputStream());
             outputStream = new DataOutputStream(socket.getOutputStream());
             socket2 = serverSocket2.accept();
             
             while (isRunning) {
-                System.out.println("Awaiting message\n\n");
+            	serverGUI.incomingRequest.append("\nAwaiting message\n");
                 
+            	
             	serverGUI.messageIn = inputStream.readUTF();
-            	serverGUI.incomingRequest.setText(serverGUI.messageIn);
-                //messageIn = inputStream.readUTF();
-                System.out.println("Message received\n");
+            	serverGUI.incomingRequest.setText("Message received\n");
+            	
+            	serverGUI.incomingRequest.append(serverGUI.messageIn);
+            	serverGUI.incomingRequest.append("\nDo You Accept or Reject this Submission?");
+            	
                 
                 inputStream2 = new DataInputStream(socket2.getInputStream());
         		outputStream2 = new DataOutputStream(socket2.getOutputStream());
         		
         		serverGUI.messageOut = inputStream2.readUTF();
         		
-        		if(serverGUI.messageOut.equals("Accepted")) {
-                	System.out.println("Submission accepted");
+        		if(serverGUI.messageOut.equals("Accept")) {
+        			serverGUI.incomingRequest.append("\nSubmission accepted\n");
                     outputStream.writeUTF(serverGUI.messageOut);
                 }
-        		else if(serverGUI.messageOut.equals("Rejected")) {
-                	System.out.println("Submission rejected");
+        		else if(serverGUI.messageOut.equals("Reject")) {
+        			serverGUI.incomingRequest.append("\nSubmission rejected\n");
                 	outputStream.writeUTF(serverGUI.messageOut);
                 }
-        		/*
-                System.out.println(messageIn.toString());
-                System.out.println("Accept or reject?");
-                input = new Scanner(System.in);
-                response = input.nextLine();
-                while(!response.equals("accept") || !response.equals("reject"))
-                {
-                	if (response.toLowerCase().equals("accept")) {
-                        System.out.println("Submission accepted");
-                        messageOut = "accept";
-                        break;
-                    }
-                    else if(response.toLowerCase().equals("reject"))
-                    {
-                        System.out.println("Submission rejected");
-                        messageOut = "reject";
-                        break;
-                    }
-                    else {
-                        System.out.println("That is not a valid response. Please try again.");
-                        response = input.nextLine();
-                    }
-                }
-                outputStream.writeUTF(messageOut);
-                */
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -61,7 +61,7 @@ public class ServerGUI extends JFrame implements ActionListener {
         if(e.getSource() == acceptButton) {
 			try 
 			{
-				messageOut = "Accepted";
+				messageOut = "Accept";
 				outputStream2.writeUTF(messageOut);
 			} 
 			catch (IOException e1) 
@@ -73,7 +73,7 @@ public class ServerGUI extends JFrame implements ActionListener {
         {    
             try 
             {
-            	messageOut = "Rejected";
+            	messageOut = "Reject";
 				outputStream2.writeUTF(messageOut);
 			} 
             catch (IOException e1) 
