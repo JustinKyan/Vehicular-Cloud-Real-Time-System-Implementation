@@ -16,7 +16,7 @@ public class Job {
     }
     
     public String toString(){
-        return "User: Client\nID: " + id + "\nDeadline: " + deadline + "\n" + "Duration: " + jobDuration + "ms \n";
+        return "\t - User: Client\n\t - ID: " + id + "\n\t - Deadline: " + deadline + "\n" + "\t - Job Duration: " + jobDuration + "ms \n";
     }
 
 }

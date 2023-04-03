@@ -20,7 +20,7 @@ public class ServerGUI extends JFrame implements ActionListener {
     {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLayout(new BoxLayout(this.getContentPane(), BoxLayout.Y_AXIS));
-        this.setTitle("Vehicular Cloud Server");
+        this.setTitle("Carboard: Server");
         this.setSize(600,800);
         
         responsePanel = new JPanel();
@@ -40,12 +40,15 @@ public class ServerGUI extends JFrame implements ActionListener {
         incomingRequest.setWrapStyleWord(true);
         
         acceptButton = new JButton("Accept");
+        acceptButton.setFont(new Font("Verdana", Font.BOLD, 12));
         acceptButton.addActionListener(this);
         
         rejectButton= new JButton("Reject");
+        rejectButton.setFont(new Font("Verdana", Font.BOLD, 12));
         rejectButton.addActionListener(this);
         
         exitButton= new JButton("Exit Program");
+        exitButton.setFont(new Font("Verdana", Font.BOLD, 12));
         exitButton.addActionListener(this);
         
         responsePanel.add(incomingRequest);

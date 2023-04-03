@@ -84,7 +84,7 @@ public class MainGUI extends JFrame implements ActionListener {
         label1.setFont(new Font("Calibri", Font.BOLD, 16));
         label1.setForeground(Color.BLACK);
         
-        label2.setFont(new Font("Calibri", Font.BOLD, 16));
+        label2.setFont(new Font("Calibri", Font.BOLD, 14));
         label2.setForeground(Color.BLACK);
         
         label3.setFont(new Font("Calibri", Font.BOLD, 12));
@@ -121,9 +121,9 @@ public class MainGUI extends JFrame implements ActionListener {
             textB1.setVisible(false);
             textB2.setVisible(false);
             textB3.setVisible(false);
-            label1.setText("To start, choose a user.");
-            label2.setText("or");
-            label3.setText("If you are satisfied, Press Exit Program");
+			label1.setText("	CARBOARD");
+			label2.setText("A simple vehicular run-time simulation.");
+			label3.setText("To start, select a user.");
             button1.setVisible(false);
             button2.setVisible(false);
             button3.setVisible(true);
@@ -139,7 +139,6 @@ public class MainGUI extends JFrame implements ActionListener {
         this.setSize(500, 500);
         this.setVisible(true);
         
-        output.setText("User Logged in");
     }
  
     
@@ -150,9 +149,9 @@ public class MainGUI extends JFrame implements ActionListener {
                 textB1.setVisible(false);
                 textB2.setVisible(false);
                 textB3.setVisible(false);
-                label1.setText("To start, choose a user.");
-                label2.setText("or");
-                label3.setText("If done, Press Exit Program");
+    			label1.setText("	CARBOARD");
+    			label2.setText("A simple vehicular run-time simulation.");
+    			label3.setText("To start, select a user.");
                 button1.setVisible(false);
                 button2.setVisible(false);
                 button3.setVisible(true);
@@ -171,7 +170,7 @@ public class MainGUI extends JFrame implements ActionListener {
                 textB1.setVisible(true); textB2.setVisible(true);   textB3.setVisible(true);
                 label1.setText("Car ID#");
                 label2.setText("Car Info (Make, Model, Year)");
-                label3.setText("Residency Time");
+                label3.setText("Residency Time (in ms)");
                 button1.setVisible(true);
                 button2.setVisible(true);
                 button3.setVisible(false);
@@ -306,5 +305,9 @@ public class MainGUI extends JFrame implements ActionListener {
         fileWriter.newLine();
         fileWriter.close();
     }
+    
+	public void run() throws UnknownHostException, IOException {
+		new MainGUI("CARBOARD - Milestone 5");
+	}
     
 }

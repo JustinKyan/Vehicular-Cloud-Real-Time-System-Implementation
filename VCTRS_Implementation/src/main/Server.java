@@ -2,14 +2,13 @@ package main;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.util.Scanner;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
-public class Server {
+public class Server extends Thread{
     static ServerSocket serverSocket;
     static ServerSocket serverSocket2;
     static Socket socket;
@@ -23,11 +22,20 @@ public class Server {
         String messageIn = "";
         String messageOut = "";
         String response = "";
-        //Scanner input;
         boolean isRunning = false;
-        serverSocket = new ServerSocket(3000);
-    	serverSocket2 = new ServerSocket(3001);
-
+        try {
+			serverSocket = new ServerSocket(3000);
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+    	try {
+			serverSocket2 = new ServerSocket(3001);
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+    	
         try {
             isRunning = true;
             ServerGUI serverGUI = new ServerGUI();
@@ -35,12 +43,12 @@ public class Server {
             serverGUI.acceptButton.setVisible(false);
         	serverGUI.rejectButton.setVisible(false);
         	
-            serverGUI.incomingRequest.setText("This is the Server\n");
-            serverGUI.incomingRequest.append("Waiting for User\n");
+        	serverGUI.incomingRequest.setText("[WELCOME]: This is Carboard's server for handling job requests.\n");
+            serverGUI.incomingRequest.append("Waiting for a request...\n");
             
             
             socket = serverSocket.accept();
-            serverGUI.incomingRequest.append("User Connected");
+            serverGUI.incomingRequest.append("[NOTICE] User connection detected.");
             inputStream = new DataInputStream(socket.getInputStream());
             outputStream = new DataOutputStream(socket.getOutputStream());
             socket2 = serverSocket2.accept();
@@ -69,11 +77,11 @@ public class Server {
             	serverGUI.rejectButton.setVisible(false);
         		
         		if(serverGUI.messageOut.equals("Accept")) {
-        			serverGUI.incomingRequest.append("\nSubmission Accepted\n");
+        			serverGUI.incomingRequest.append("\n[NOTICE] Submission accepted.\n");
                     outputStream.writeUTF(serverGUI.messageOut);
                 }
         		else if(serverGUI.messageOut.equals("Reject")) {
-        			serverGUI.incomingRequest.append("\nSubmission Rejected\n");
+        			serverGUI.incomingRequest.append("\n[NOTICE] Submission rejected.\n");
                 	outputStream.writeUTF(serverGUI.messageOut);
                 }
         		
