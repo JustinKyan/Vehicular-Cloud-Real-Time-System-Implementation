@@ -1,17 +1,17 @@
 package main;
 import java.io.*;
+import java.sql.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
  
 import java.time.*;
 import java.time.format.*;
-import java.awt.Desktop;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.sql.*; 
-
+ 
+ 
 public class MainGUI extends JFrame implements ActionListener {
     // Instance variables
     private JPanel dropdownMenu, textInput, buttonInput, textOutput;
@@ -21,24 +21,27 @@ public class MainGUI extends JFrame implements ActionListener {
     private JComboBox dropdownChoices;
     private JButton button1, button2, button3;
     
+    LocalDateTime time = LocalDateTime.now();
+    DateTimeFormatter format = DateTimeFormatter.ofPattern("MM-dd-yyyy hh:mm:ss a");
+    String formattedTime = time.format(format);
+    
     static ServerSocket serverSocket;
     static Socket socket;
     static DataInputStream inputStream;
     static DataOutputStream outputStream;
-    static java.sql.Connection connection = null;
-    static String url = "";
-  	static String username = "root";
-  	static String password = "";
-  	
+    static Connection connection = null;
+    
     private File ownerFile = new File("Owner Log.txt");
     private File clientFile = new File("Client-Jobs.txt");
 
-    
     private VCController controller = new VCController();
     
-    LocalDateTime time = LocalDateTime.now();
-    DateTimeFormatter format = DateTimeFormatter.ofPattern("MM-dd-yyyy hh:mm:ss a");
-    String formattedTime = time.format(format);
+    // SQL Implementation variables
+    static java.sql.Connection sqlConnection = null;
+    static String url = "jdbc:mysql://localhost:3306/vc3?useTimezone=true&serverTimezone=UTC";
+    static String username = "root";
+    static String password = "asdasd123";
+    
     
     public MainGUI(String title) throws UnknownHostException, IOException {
         socket = new Socket("localhost", 3000);
@@ -234,24 +237,23 @@ public class MainGUI extends JFrame implements ActionListener {
     public void informationsubmitted(ActionEvent event) {
         if (dropdownChoices.getSelectedItem().equals("Owner") && event.getSource() == button1) 
         {
+        	refreshTime();
+            
             output.setText("Information submitted on: " + formattedTime + "\n" +
         "\tOwner ID: " + textB1.getText() + "\n" + 
         "\tVehicle Info (Make, Model, Year): " + textB2.getText() + "\n" + 
-        "\tResidency Duration: " + textB3.getText());
+        "\tResidency Duration: " + textB3.getText() + "ms");
         }
         else if (dropdownChoices.getSelectedItem().equals("Client") && event.getSource() == button1) {
+        	refreshTime();
+        	
             output.setText("Information submitted on: " + formattedTime + "\n" + 
         "\tJob ID: " + textB1.getText() + "\n" + 
         "\tJob Deadline: " + textB2.getText() + "\n" + 
         "\tApproximate Job Duration: " + textB3.getText() + " ms");
         }
     }
-    
-    void emptyboxes() {
-        textB1.setText("");
-        textB2.setText("");
-        textB3.setText("");
-    }
+
     
     public void fileProcess(ActionEvent event) throws UnknownHostException, IOException{
         //String userType = (String) dropdownChoices.getSelectedItem();
@@ -263,7 +265,7 @@ public class MainGUI extends JFrame implements ActionListener {
         try {
             if(dropdownChoices.getSelectedItem().equals("Owner")) {
                 
-                Car newVehicle = new Car(id, info,duration);
+                Car newVehicle = new Car(id, info, duration);
                 outputStream.writeUTF(newVehicle.toString());
                 messageIn = inputStream.readUTF();
                 if(messageIn.equals("Accept")) {
@@ -271,16 +273,7 @@ public class MainGUI extends JFrame implements ActionListener {
                     output.append("\n\t[Vehicle ACCEPTED]");
                     output.append("\n\t[Vehicle Stored]");
                     writeToFile(newVehicle.toString(), ownerFile);
-                    try {
-                        connection = DriverManager.getConnection(url, username, password);
-                        String sql = "INSERT INTO owners" + "VALUES ("+ id +" ,'" + info +"'," + duration + "," + formattedTime+")"; 
-                        Statement statement = connection.createStatement();
-                        int row = statement.executeUpdate(sql);
-                        if (row > 0)
-                        	output.append("\n\t[Vehicle Data Stored]");
-                    }catch(SQLException e){
-                        e.getMessage();
-                    }
+                    addtoDB(id, info, duration);
                 }
                 if(messageIn.equals("Reject")) {
                     output.append("\n\t[Vehicle REJECTED]");
@@ -289,24 +282,14 @@ public class MainGUI extends JFrame implements ActionListener {
                 
             }
             else if(dropdownChoices.getSelectedItem().equals("Client")) {
-                Job newJob = new Job(id,info,duration);
+                Job newJob = new Job(id, info, duration);
                 outputStream.writeUTF(newJob.toString());
                 messageIn = inputStream.readUTF();
                 if(messageIn.equals("Accept")) {   
                 	controller.assignJob(newJob);
                     output.append("\n\t[JOB ACCEPTED]");
-                    output.append("\n\t[Job Stored]");
+                    output.append("\n\t[Database updated]");
                     writeToFile(newJob.toString(), clientFile);
-                    try {
-                        connection = DriverManager.getConnection(url, username, password);
-                        String sql = "INSERT INTO clients" + "VALUES ("+ id +" ,'" + info +"'," + duration + "," + formattedTime+")"; 
-                        Statement statement = connection.createStatement();
-                        int row = statement.executeUpdate(sql);
-                        if (row > 0)
-                        	output.append("\n\t[Job Data Stored]");
-                    }catch(SQLException e){
-                        e.getMessage();
-                    }
                 }
                 if(messageIn.equals("Reject")) {
                     output.append("\n\t[JOB REJECTED]");
@@ -328,8 +311,52 @@ public class MainGUI extends JFrame implements ActionListener {
         fileWriter.close();
     }
     
-	public void run() throws UnknownHostException, IOException {
-		new MainGUI("CARBOARD - Milestone 6");
-	}
+    void refreshTime() {
+        time = LocalDateTime.now();
+        format = DateTimeFormatter.ofPattern("MM-dd-yyyy hh:mm:ss a");
+        formattedTime = time.format(format);
+    }
     
+    void emptyboxes() {
+        textB1.setText("");
+        textB2.setText("");
+        textB3.setText("");
+    }
+    
+    void addtoDB(int ID, String info, double time) {
+    	if (dropdownChoices.getSelectedItem().equals("Owner")){
+        try {
+        	refreshTime();
+            
+            sqlConnection = DriverManager.getConnection(url, username, password);
+            String sql = "INSERT INTO car_owner " + "VALUES" + " (" + 
+            		ID + ", '"
+            		+ info + "', " 
+            		+ time + ", '" +
+            		formattedTime + "');"; 
+            // INSERT INTO car_owner VALUES (id, 'info', duration, 'formattedTime');
+            Statement statement = sqlConnection.createStatement();
+            int row = statement.executeUpdate(sql);
+        } catch (SQLException e){
+            	e.getMessage();
+        	}
+    	} else if (dropdownChoices.getSelectedItem().equals("Client")){
+    		try {
+        	refreshTime();
+            
+            sqlConnection = DriverManager.getConnection(url, username, password);
+            String sql = "INSERT INTO client_jobs " + "VALUES" + " (" + 
+            		ID + ", '"
+            		+ info + "', " 
+            		+ time + ", '" +
+            		formattedTime + "');"; 
+            // INSERT INTO client_jobs VALUES (id, 'info', duration, 'formattedTime');
+            Statement statement = sqlConnection.createStatement();
+            int row = statement.executeUpdate(sql);
+        } catch (SQLException e){
+            	e.getMessage();
+        	}
+    }
+    
+}
 }

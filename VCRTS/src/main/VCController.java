@@ -7,8 +7,9 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.sql.*;
 
-public class VCController {
+public class VCController extends Thread {
     private Queue<Car> cars; 
     private Queue<Job> jobs;
     
@@ -28,6 +29,7 @@ public class VCController {
     static DataInputStream inputStream2;
     static DataOutputStream outputStream2;
 
+    
     Queue<Job> getJobs(){ return this.jobs; }
     
     public VCController(){
@@ -35,7 +37,10 @@ public class VCController {
         jobs = new LinkedList<Job>();
         checkpoints = new ArrayList<Checkpoint>();
     }
-
+    
+    void writeToDB() {
+    }
+    
     void assignJob(Job j){ jobs.add(j); }
     
     void markComplete(Job completed) { completedJobs.add(completed); }
