@@ -14,7 +14,7 @@ public class Car {
     }
 
     public String toString(){
-        return "ID: " + id + "\n" + "Model: " + CarInfo + "\n" + "Duration: " + residencyDuration + "\n";
+        return "\t - User: Car Owner\n\t - ID: " + id + "\n" + "\t - Model: " + CarInfo + "\n" + "\t - Residency Duration: " + residencyDuration + "ms\n";
     }
     
     public String getCarInfo() { return this.CarInfo; }

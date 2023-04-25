@@ -1,32 +1,21 @@
 package main;
 import java.util.*;
 
-public class CarOwner extends User {
+public class CarOwner {
+	private int OwnerID;
+	private String VehicleInfo, time;
 	
-	private ArrayList<Car> ownedCars = new ArrayList<Car>();
-	
-	public CarOwner(int ownerID, ArrayList<Car> owned){
-		super(ownerID);
-		this.ownedCars = owned;
-		this.privilege = false;
+	public CarOwner(int OwnerID, String VehicleInfo, String time){
+		this.OwnerID = OwnerID;
+		this.VehicleInfo = VehicleInfo;
+		this.time = time;
 	}
+	public int getOwnerID(){ return OwnerID; }
+	public String getVehicleInfo(){	return VehicleInfo;	}
+	public String getTime(){ return time;	}
 	
-	public int getOwnerID(){
-		return this.id;
-	}
-	
-	public ArrayList<Car> getCarsOwned() {
-		return this.ownedCars;
-	}
-	
-	public void regCar(Car c) {
-		this.ownedCars.add(c);
-	}
-	
-	public void unregCar(Car c) {
-		for(int i = 0; i < ownedCars.size(); i++) {
-			if(this.ownedCars.get(i) == c)
-				this.ownedCars.remove(i);
-		}
+	public String toString(){
+		return "OwnerID:" + OwnerID + "\nVehicle Info:" + VehicleInfo + "\nResidency Time:" + time;
+
 	}
 }
