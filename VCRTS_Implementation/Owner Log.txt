@@ -1,0 +1,12 @@
+Timestamp: 04-24-2023 03:34:47 PM
+	 - User: Car Owner
+	 - ID: 15
+	 - Model: Ford Mustang
+	 - Residency Duration: 15.0ms
+
+Timestamp: 04-24-2023 03:36:08 PM
+	 - User: Car Owner
+	 - ID: 80
+	 - Model: Honda Civic
+	 - Residency Duration: 30.0ms
+
